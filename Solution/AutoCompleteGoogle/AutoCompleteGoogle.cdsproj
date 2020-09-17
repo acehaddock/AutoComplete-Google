@@ -41,6 +41,13 @@
   
   <ItemGroup>
     <ProjectReference Include="..\..\AutoComplete-Google.pcfproj" />
+      <Project>be077506-712f-43af-8407-e5435784c155</Project>
+      <Name>AutoComplete-Google</Name>
+      <Targets>Build</Targets>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <OutputItemType>Content</OutputItemType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </ProjectReference>
   </ItemGroup>
 
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
