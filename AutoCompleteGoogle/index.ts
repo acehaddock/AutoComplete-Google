@@ -17,6 +17,10 @@ export class AutoCompleteGoogle implements ComponentFramework.StandardControl<II
     private state: string;
     private zipcode: string;
     private country: string;
+    private countrycode: string;
+	private stateabb: string;
+	private latitude: number;
+	private longitude: number;
 
 	constructor()
 	{
@@ -76,6 +80,14 @@ export class AutoCompleteGoogle implements ComponentFramework.StandardControl<II
                 this.state = "";
                 this.country = "";
                 this.zipcode = "";
+                this.countrycode = "";
+				this.stateabb = "";
+				let addressGeometry = place.geometry;
+                if(addressGeometry != undefined){
+                
+                    this.latitude = addressGeometry.location.lat();
+					this.longitude = addressGeometry.location.lng();
+                }
 
                 let streetNumber = "";
 
@@ -83,7 +95,8 @@ export class AutoCompleteGoogle implements ComponentFramework.StandardControl<II
                     let addressComponent = place.address_components[i];
                     let componentType = addressComponent.types[0];
                     let addressPiece = addressComponent.long_name;
-
+                    let addressPieceShort = addressComponent.short_name;
+                    
                     switch (componentType) {
                         case "street_number":
                             streetNumber = ", " + addressPiece;
@@ -106,6 +119,12 @@ export class AutoCompleteGoogle implements ComponentFramework.StandardControl<II
                             break;
                         case "postal_code":
                             this.zipcode = addressPiece;
+                            break;
+                        case "country":
+                            this.countrycode = addressPieceShort;
+                            break;
+                        case "administrative_area_level_1":
+                            this.stateabb = addressPieceShort;
                             break;
                     }
 
@@ -146,7 +165,11 @@ export class AutoCompleteGoogle implements ComponentFramework.StandardControl<II
             county: this.county,
             state: this.state,
             country: this.country,
-			zipcode: this.zipcode
+            zipcode: this.zipcode,
+            countrycode: this.countrycode,
+			stateabb: this.stateabb,
+			latitude: this.latitude,
+			longitude: this.longitude
 		};
 	}
 
