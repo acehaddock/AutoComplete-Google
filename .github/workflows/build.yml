@@ -71,7 +71,7 @@ jobs:
         if: steps.checkpcfconfig.outputs.exists == 'True'
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ steps.solution-unique-name.outputs.info }}_${{ steps.solution-version.outputs.info }}_managed.zip
+          name: ${{ steps.solution-unique-name.outputs.info }}_${{ steps.solution-version.outputs.info }}_managed
           path: ${{ steps.checkpcfconfig.outputs.buildtarget }}/bin/Release/${{ steps.solution-unique-name.outputs.info }}.zip
 
       - name: Unmanaged Solution Artifact ${{ steps.solution-unique-name.outputs.info }}_${{ steps.solution-version.outputs.info }}_unmanaged.zip
