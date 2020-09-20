@@ -113,18 +113,14 @@ export class AutoCompleteGoogle implements ComponentFramework.StandardControl<II
                             break;
                         case "administrative_area_level_1":
                             this.state = addressPiece;
+                            this.stateabb = addressPieceShort;
                             break;
                         case "country":
                             this.country = addressPiece;
+                            this.countrycode = addressPieceShort;
                             break;
                         case "postal_code":
                             this.zipcode = addressPiece;
-                            break;
-                        case "country":
-                            this.countrycode = addressPieceShort;
-                            break;
-                        case "administrative_area_level_1":
-                            this.stateabb = addressPieceShort;
                             break;
                     }
 
