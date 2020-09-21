@@ -102,7 +102,7 @@ export class AutoCompleteGoogle implements ComponentFramework.StandardControl<II
                             streetNumber = ", " + addressPiece;
                             break;
                         case "route":
-                            this.street = streetNumber + addressPiece + ;
+                            this.street = streetNumber + addressPiece;
                             break;
                         case "locality":
                         case "postal_town":
