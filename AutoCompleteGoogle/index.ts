@@ -99,7 +99,7 @@ export class AutoCompleteGoogle implements ComponentFramework.StandardControl<II
                     
                     switch (componentType) {
                         case "street_number":
-                            streetNumber = addressPiece;
+                            streetNumber = addressPiece + " ";
                             break;
                         case "route":
                             this.street = streetNumber + addressPiece;
