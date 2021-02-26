@@ -43,7 +43,7 @@ export class AutoCompleteGoogle implements ComponentFramework.StandardControl<II
         let environmentvariable = context.parameters.environmentvariableforgooglekey.raw;
         let query = "?$select=schemaname,defaultvalue&$filter=schemaname eq '"+environmentvariable+"'"; 
 
-        Xrm.WebApi.retrieveMultipleRecords("environmentvariabledefinition", query).then(
+        context.webAPI.retrieveMultipleRecords("environmentvariabledefinition", query).then(
             function success(result){
                 for(var i= 0; i < result.entities.length; i++){
                     if (result.entities[i]["schemaname"] === environmentvariable){
