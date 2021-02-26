@@ -21,6 +21,9 @@ export class AutoCompleteGoogle implements ComponentFramework.StandardControl<II
 	private stateabb: string;
 	private latitude: number;
 	private longitude: number;
+    private googleapikey: string;
+   
+
 
 	constructor()
 	{
@@ -37,8 +40,22 @@ export class AutoCompleteGoogle implements ComponentFramework.StandardControl<II
 	 */
 	public init(context: ComponentFramework.Context<IInputs>, notifyOutputChanged: () => void, state: ComponentFramework.Dictionary, container:HTMLDivElement)
 	{
-        if (typeof (context.parameters.googleapikey) === "undefined" ||
-            typeof (context.parameters.googleapikey.raw) === "undefined") {
+        let environmentvariable = context.parameters.environmentvariableforgooglekey.raw;
+        let query = "?$select=schemaname,defaultvalue&$filter=schemaname eq '"+environmentvariable+"'"; 
+
+        Xrm.WebApi.retrieveMultipleRecords("environmentvariabledefinition", query).then(
+            function success(result){
+                for(var i= 0; i < result.entities.length; i++){
+                    if (result.entities[i]["schemaname"] === environmentvariable){
+                        this.googleapikey = result.entities[i]["defaultvalue"];
+                    }
+                }
+            }
+            )
+       
+       
+        if (typeof (this.googleapikey) === "undefined" ||
+            typeof (this.googleapikey) === "undefined") {
             container.innerHTML = "Please provide a valid google api key";
             return;
         }
@@ -53,8 +70,8 @@ export class AutoCompleteGoogle implements ComponentFramework.StandardControl<II
 
         container.appendChild(this.searchBox);
 
-        let googleApiKey = context.parameters.googleapikey.raw;
-        let scriptUrl = "https://maps.googleapis.com/maps/api/js?libraries=places&language=en&key=" + googleApiKey;
+        //let googleApiKey = context.parameters.googleapikey.raw;
+        let scriptUrl = "https://maps.googleapis.com/maps/api/js?libraries=places&language=en&key=" + this.googleapikey;
 
         let scriptNode = document.createElement("script");
         scriptNode.setAttribute("type", "text/javascript");
