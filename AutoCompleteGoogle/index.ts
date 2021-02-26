@@ -21,7 +21,7 @@ export class AutoCompleteGoogle implements ComponentFramework.StandardControl<II
 	private stateabb: string;
 	private latitude: number;
 	private longitude: number;
-    private googleapikey: string;
+    //private googleapikey: string;
    
 
 
@@ -42,20 +42,21 @@ export class AutoCompleteGoogle implements ComponentFramework.StandardControl<II
 	{
         let environmentvariable = context.parameters.environmentvariableforgooglekey.raw;
         let query = "?$select=schemaname,defaultvalue&$filter=schemaname eq '"+environmentvariable+"'"; 
+        let googleapikey = "";
 
         context.webAPI.retrieveMultipleRecords("environmentvariabledefinition", query).then(
             function success(result){
                 for(var i= 0; i < result.entities.length; i++){
                     if (result.entities[i]["schemaname"] === environmentvariable){
-                        this.googleapikey = result.entities[i]["defaultvalue"];
+                        googleapikey = result.entities[i]["defaultvalue"];
                     }
                 }
             }
             )
        
        
-        if (typeof (this.googleapikey) === "undefined" ||
-            typeof (this.googleapikey) === "undefined") {
+        if (typeof (googleapikey) === "undefined" ||
+            typeof (googleapikey) === "undefined") {
             container.innerHTML = "Please provide a valid google api key";
             return;
         }
@@ -71,7 +72,7 @@ export class AutoCompleteGoogle implements ComponentFramework.StandardControl<II
         container.appendChild(this.searchBox);
 
         //let googleApiKey = context.parameters.googleapikey.raw;
-        let scriptUrl = "https://maps.googleapis.com/maps/api/js?libraries=places&language=en&key=" + this.googleapikey;
+        let scriptUrl = "https://maps.googleapis.com/maps/api/js?libraries=places&language=en&key=" + googleapikey;
 
         let scriptNode = document.createElement("script");
         scriptNode.setAttribute("type", "text/javascript");
