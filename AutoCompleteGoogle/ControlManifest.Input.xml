@@ -3,7 +3,6 @@
   <control namespace="AC" constructor="AutoCompleteGoogle" version="0.0.1" display-name-key="AutoCompleteGoogle" description-key="Use this control to enable address autocomplete feature powered by Google Places API" control-type="standard">
     <!-- property node identifies a specific, configurable piece of data that the control expects from CDS -->
     <property name="value" display-name-key="Full Address" description-key="Full Address" of-type="SingleLine.Text" usage="bound" required="true" />
-    <property name="environmentvariableforgooglekey" display-name-key="EV Google API Key" description-key="Enter valid environment variable for the Google API Key to enable address autocomplete functionality" of-type="SingleLine.Text" usage="input" required="true" />
     <property name="street" display-name-key="Street" description-key="Street" of-type="SingleLine.Text" usage="bound" required="true" />
     <property name="city" display-name-key="City" description-key="City" of-type="SingleLine.Text" usage="bound" required="true" />
     <property name="county" display-name-key="County" description-key="County" of-type="SingleLine.Text" usage="bound" required="true" />
@@ -14,6 +13,7 @@
     <property name="stateabb" display-name-key="State Abb" description-key="State Abb" of-type="SingleLine.Text" usage="bound" required="true" />
     <property name="latitude" display-name-key="Latitude" description-key="latitude" of-type="FP" usage="bound" required="true" />
     <property name="longitude" display-name-key="Longitude" description-key="longitude" of-type="FP" usage="bound" required="true" />
+    <property name="envvariablename" display-name-key="EnvVariableName" description-key="EnvVariableName" of-type="SingleLine.Text" usage="input" required="true" />
     <!-- 
       Property node's of-type attribute can be of-type-group attribute. 
       Example:

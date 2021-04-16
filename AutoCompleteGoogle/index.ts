@@ -1,12 +1,8 @@
-import {IInputs, IOutputs} from "./generated/ManifestTypes";
+import { IInputs, IOutputs } from "./generated/ManifestTypes";
 
-export class AutoCompleteGoogle implements ComponentFramework.StandardControl<IInputs, IOutputs> {
+export class AddressAutocomplete implements ComponentFramework.StandardControl<IInputs, IOutputs> {
 
-	/**
-	 * Empty constructor.
-	 */
-
-	private notifyOutputChanged: () => void;
+    private notifyOutputChanged: () => void;
     private searchBox: HTMLInputElement;
 
     private autocomplete: google.maps.places.Autocomplete;
@@ -17,50 +13,27 @@ export class AutoCompleteGoogle implements ComponentFramework.StandardControl<II
     private state: string;
     private zipcode: string;
     private country: string;
+    private theContext: ComponentFramework.Context<IInputs>;
+    private envvariablename: string;
     private countrycode: string;
 	private stateabb: string;
 	private latitude: number;
 	private longitude: number;
-    //private googleapikey: string;
-   
+    
+    constructor() {
 
+    }
 
-	constructor()
-	{
-
-	}
-
-	/**
-	 * Used to initialize the control instance. Controls can kick off remote server calls and other initialization actions here.
-	 * Data-set values are not initialized here, use updateView.
-	 * @param context The entire property bag available to control via Context Object; It contains values as set up by the customizer mapped to property names defined in the manifest, as well as utility functions.
-	 * @param notifyOutputChanged A callback method to alert the framework that the control has new outputs ready to be retrieved asynchronously.
-	 * @param state A piece of data that persists in one session for a single user. Can be set at any point in a controls life cycle by calling 'setControlState' in the Mode interface.
-	 * @param container If a control is marked control-type='standard', it will receive an empty div element within which it can render its content.
-	 */
-	public init(context: ComponentFramework.Context<IInputs>, notifyOutputChanged: () => void, state: ComponentFramework.Dictionary, container:HTMLDivElement)
-	{
-        let environmentvariable = context.parameters.environmentvariableforgooglekey.raw;
-        let query = "?$select=schemaname,defaultvalue&$filter=schemaname eq '"+environmentvariable+"'"; 
-        let googleapikey = "";
-
-        context.webAPI.retrieveMultipleRecords("environmentvariabledefinition", query).then(
-            function success(result){
-                for(var i= 0; i < result.entities.length; i++){
-                    if (result.entities[i]["schemaname"] === environmentvariable){
-                        googleapikey = result.entities[i]["defaultvalue"];
-                    }
-                }
-            }
-            )
-       
-       
-        if (typeof (googleapikey) === "undefined" ||
-            typeof (googleapikey) === "undefined") {
-            container.innerHTML = "Please provide a valid google api key";
+    public init(context: ComponentFramework.Context<IInputs>,
+        notifyOutputChanged: () => void,
+        state: ComponentFramework.Dictionary,
+        container: HTMLDivElement) {
+        if (typeof (context.parameters.envvariablename) === "undefined" ||
+            typeof (context.parameters.envvariablename.raw) === "undefined") {
+            container.innerHTML = "Please provide a valid env variable name to retrieve google api key";
             return;
         }
-
+        this.theContext = context;
         this.notifyOutputChanged = notifyOutputChanged;
 
         this.searchBox = document.createElement("input");
@@ -71,8 +44,8 @@ export class AutoCompleteGoogle implements ComponentFramework.StandardControl<II
 
         container.appendChild(this.searchBox);
 
-        //let googleApiKey = context.parameters.googleapikey.raw;
-        let scriptUrl = "https://maps.googleapis.com/maps/api/js?libraries=places&language=en&key=" + googleapikey;
+        this.GetGoogleMapsAPIKey().then((varGoogleKey)=>{
+        let scriptUrl = "https://maps.googleapis.com/maps/api/js?libraries=places&language=en&key=" + varGoogleKey;
 
         let scriptNode = document.createElement("script");
         scriptNode.setAttribute("type", "text/javascript");
@@ -114,7 +87,7 @@ export class AutoCompleteGoogle implements ComponentFramework.StandardControl<II
                     let componentType = addressComponent.types[0];
                     let addressPiece = addressComponent.long_name;
                     let addressPieceShort = addressComponent.short_name;
-                    
+
                     switch (componentType) {
                         case "street_number":
                             streetNumber = addressPiece + " ";
@@ -149,7 +122,9 @@ export class AutoCompleteGoogle implements ComponentFramework.StandardControl<II
             });
         },
             1000);
-	}
+        })
+    }
+
     private onMouseEnter(): void {
         this.searchBox.className = "addressAutocompleteFocused";
     }
@@ -157,23 +132,23 @@ export class AutoCompleteGoogle implements ComponentFramework.StandardControl<II
     private onMouseLeave(): void {
         this.searchBox.className = "addressAutocomplete";
     }
+
+
 	/**
 	 * Called when any value in the property bag has changed. This includes field values, data-sets, global values such as container height and width, offline status, control metadata values such as label, visible, etc.
 	 * @param context The entire property bag available to control via Context Object; It contains values as set up by the customizer mapped to names defined in the manifest, as well as utility functions
 	 */
-	public updateView(context: ComponentFramework.Context<IInputs>): void
-	{
-		// Add code to update control view
-	}
+    public updateView(context: ComponentFramework.Context<IInputs>): void {
+        // Add code to update control view
+    }
 
 	/** 
 	 * It is called by the framework prior to a control receiving new data. 
 	 * @returns an object based on nomenclature defined in manifest, expecting object[s] for property marked as “bound” or “output”
 	 */
-	public getOutputs(): IOutputs
-	{
-		return {            
-			value: this.value,
+    public getOutputs(): IOutputs {
+        return {
+            value: this.value,
             street: this.street,
             city: this.city,
             county: this.county,
@@ -184,15 +159,27 @@ export class AutoCompleteGoogle implements ComponentFramework.StandardControl<II
 			stateabb: this.stateabb,
 			latitude: this.latitude,
 			longitude: this.longitude
-		};
-	}
+        };
+    }
 
 	/** 
 	 * Called when the control is to be removed from the DOM tree. Controls should use this call for cleanup.
 	 * i.e. cancelling any pending remote calls, removing listeners, etc.
 	 */
-	public destroy(): void
-	{
-		// Add code to cleanup control if necessary
-	}
+    public destroy(): void {
+        // Add code to cleanup control if necessary
+    }
+    private async GetGoogleMapsAPIKey(): Promise<string | null> {
+        let varGoogleKey = "";
+        let result = await this.theContext.webAPI.retrieveMultipleRecords("environmentvariabledefinition", "?$select=schemaname,defaultvalue&$expand=environmentvariabledefinition_environmentvariablevalue($select=value)&$filter=schemaname eq '"+this.theContext.parameters.envvariablename.raw+"'" );
+        if(result){
+                for(var i= 0; i < result.entities.length; i++){
+                    if (result.entities[i]["schemaname"] === "myapp_GoogleAPIkey" && result.entities[0].environmentvariabledefinition_environmentvariablevalue[0].value != null){
+                        varGoogleKey = result.entities[0].environmentvariabledefinition_environmentvariablevalue[0].value;
+                    }
+                }
+            }
+            return varGoogleKey;
+    }
+
 }
