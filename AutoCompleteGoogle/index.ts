@@ -1,6 +1,6 @@
 import { IInputs, IOutputs } from "./generated/ManifestTypes";
 
-export class AddressAutocomplete implements ComponentFramework.StandardControl<IInputs, IOutputs> {
+export class AutoCompleteGoogle implements ComponentFramework.StandardControl<IInputs, IOutputs> {
 
     private notifyOutputChanged: () => void;
     private searchBox: HTMLInputElement;
