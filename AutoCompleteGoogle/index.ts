@@ -45,7 +45,8 @@ export class AutoCompleteGoogle implements ComponentFramework.StandardControl<II
         container.appendChild(this.searchBox);
 
         this.GetGoogleMapsAPIKey().then((varGoogleKey)=>{
-        let scriptUrl = "https://maps.googleapis.com/maps/api/js?libraries=places&language=en&key=" + varGoogleKey;
+        //let scriptUrl = "https://maps.googleapis.com/maps/api/js?libraries=places&language=en&key=" + varGoogleKey;
+        let scriptUrl = "https://maps.googleapis.com/maps/api/js?key=" + varGoogleKey +"libraries=places";
 
         let scriptNode = document.createElement("script");
         scriptNode.setAttribute("type", "text/javascript");
