@@ -174,7 +174,7 @@ export class AutoCompleteGoogle implements ComponentFramework.StandardControl<II
         let result = await this.theContext.webAPI.retrieveMultipleRecords("environmentvariabledefinition", "?$select=schemaname,defaultvalue&$expand=environmentvariabledefinition_environmentvariablevalue($select=value)&$filter=schemaname eq '"+this.theContext.parameters.envvariablename.raw+"'" );
         if(result){
                 for(var i= 0; i < result.entities.length; i++){
-                    if (result.entities[i]["schemaname"] === "myapp_GoogleAPIkey" && result.entities[0].environmentvariabledefinition_environmentvariablevalue[0].value != null){
+                    if (result.entities[i]["schemaname"] === this.theContext.parameters.envvariablename.raw && result.entities[0].environmentvariabledefinition_environmentvariablevalue[0].value != null){
                         varGoogleKey = result.entities[0].environmentvariabledefinition_environmentvariablevalue[0].value;
                     }
                 }
