@@ -9,9 +9,9 @@
     "start": "pcf-scripts start"
   },
   "dependencies": {
-    "@types/googlemaps": "^3.37.0",
-    "@types/node": "^10.12.18",
-    "@types/powerapps-component-framework": "^1.2.0"
+    "@types/googlemaps": "^3.43.3",
+    "@types/node": "^10.17.35",
+    "@types/powerapps-component-framework": "^1.2.3"
   },
   "devDependencies": {
     "pcf-scripts": "^1",
